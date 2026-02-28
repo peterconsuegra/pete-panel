@@ -1,0 +1,43 @@
+# Query: isAdmin?
+# ContextLines: 1
+
+9 results - 3 files
+
+app/Http/Controllers/SiteController.php:
+   52  		// Only admins can see all sites
+   53: 		if (! Gate::allows('user.admin')) {
+   54  			$query->where('user_id', $currentUser->id);
+
+  123  
+  124: 		if (! Gate::allows('user.admin')) {
+  125  			$query->where('user_id', $currentUser->id);
+
+app/Http/Controllers/UserController.php:
+   28      {
+   29:         Gate::authorize('user.admin');
+   30  
+
+   44      {
+   45:         Gate::authorize('user.admin');
+   46  
+
+   56      {
+   57:         Gate::authorize('user.admin');
+   58  
+
+   75      {
+   76:         Gate::authorize('user.admin');
+   77  
+
+   86      {
+   87:        Gate::authorize('user.admin');
+   88  
+
+  117      {
+  118:         Gate::authorize('user.admin');
+  119  
+
+app/Providers/AuthServiceProvider.php:
+  22          
+  23:         Gate::define('user.admin', static fn (Authenticatable $user): bool =>
+  24              (bool) (data_get($user, 'admin', false))

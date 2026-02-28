@@ -1,0 +1,95 @@
+# WordPress Pete – Changelog
+
+All rights reserved © WordPress Pete.  
+This software is proprietary. Commercial licenses available at https://wordpresspete.com  
+
+==================================================================
+Version 13.0 – 2025-09
+------------------------------------------------------------------
+- 🚀 Major release with Laravel 10.x core upgrade (PHP 8.3 support).
+- Improved integration between WordPress and Laravel with one-click setup.
+- Added enhanced Admin security tools with OWASP CRS integration.
+- New backup restore/download flows under `/backups` routes.
+- Built-in SSL generator integrated with Let’s Encrypt.
+- Performance tuning: Apache MPM Event, HTTP/2 support by default.
+- Improved UI layout with Bootstrap 5.3, sidebar refinements, and toast notifications.
+- Extended Gate policies for sites and backups (admin/owner rules).
+- Enhanced unauthorized access logging for better audit trails.
+
+==================================================================
+Version 12.0 – 2025-06
+------------------------------------------------------------------
+- Introduced PeteOption & PeteService singletons for cleaner app-wide caching.
+- Added global view composers (sidebar options, dashboard URL).
+- Integrated system variables (options) CRUD with full auth & gate checks.
+- Cache invalidation on Option model save/delete events.
+- New plugin management endpoints:
+  • Install, uninstall, update plugins via `/plugins` prefix.
+- Added server status & toggle actions in Admin routes.
+- PHPMyAdmin panel and toggle endpoint included.
+
+==================================================================
+Version 11.0 – 2025-03
+------------------------------------------------------------------
+- Enhanced authentication flows:
+  • Login throttling middleware (`throttle:login`).
+  • Password update for “My Account” section.
+- Added user roles and admin-only Gates.
+- Extended system security reporting & toggle endpoints.
+- Refined multi-user collaboration: owners vs admins for Sites/Backups.
+
+==================================================================
+Version 10.0 – 2024-12
+------------------------------------------------------------------
+- UI refresh with Bootstrap 5 + Icons.
+- Sidebar fully dynamic with options injected via Pete service.
+- Added demo warning banners (for `PETE_DEMO=active` environments).
+- New server-side flash messaging for errors and successes.
+- Optimized artisan commands for cache clearing:
+  • `pete:refresh-plugins`
+  • `pete:refresh-version`
+  • `pete:clear-cache`
+
+==================================================================
+Version 9.0 – 2024-09
+------------------------------------------------------------------
+- Plugin Converter support (export WordPress → Pete format).
+- Added `cloneSite`, `generateSSL`, `exportSite`, and `getSites` endpoints.
+- First iteration of Logs viewer for Sites.
+- Introduced option to switch PHP versions easily for debugging.
+- Improved database debugging with phpMyAdmin baked into Pete stack.
+
+==================================================================
+Version 8.0 – 2024-06
+------------------------------------------------------------------
+- Backup system expanded with restore + download endpoints.
+- Multi-tenant friendly architecture: user_id ownership checks on models.
+- More Laravel Gates introduced for fine-grained authorization.
+- Added toast notification system to layout (Bootstrap JS integration).
+
+==================================================================
+Version 7.0 – 2024-03
+------------------------------------------------------------------
+- Docker stack refinements:
+  • Apache tuning (MPM Event, caching modules).
+  • Integrated ModSecurity toggle via admin interface.
+- New OWASP CRS integration for better app-level protection.
+- Auto SSL provisioning prototype added.
+
+==================================================================
+Version 6.0 – 2023-12
+------------------------------------------------------------------
+- Initial Laravel–WordPress integration prototype (bridge plugin).
+- First release of Admin update/version check endpoints.
+- Added Pete license validation and demo site reset commands.
+- Added environment-based redirects (petelocal.net → dev playground).
+
+==================================================================
+Version 5.0 – 2023-09
+------------------------------------------------------------------
+- Baseline refactor release.
+- Docker LAMP stack stabilized for PHP 8.1+.
+- Core Laravel scaffolding upgraded.
+- Initial CRUD routes for Sites, Options, Backups.
+- Basic authentication (login/register/logout).
+- Early Pete Converter plugin support for site export/import.

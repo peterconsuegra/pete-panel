@@ -1,0 +1,1434 @@
+<html>
+<head>
+<style>
+    body {
+        font-family: sans-serif;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    table, th, td {
+        border: 1px solid black;
+        vertical-align: top;
+    }
+    th { text-align: left;
+        padding: 0.2em 0.5em 0.2em 0.5em;
+    }
+    td {
+        padding: 0.2em 0.5em 0.2em 0.5em;
+    }
+    th {
+        background-color: #444;
+        color: #FFF;
+    }
+    td.nowrap {
+        white-space: nowrap;
+    }
+    table.requests {
+        width: 100%
+    }
+    table.requests tr.overview {
+        background-color: #F0F0F0;
+    }
+    table.requests tr.details {
+        display: none;
+        opacity: 0.7;
+    }
+    div.details {
+        margin: 32px;
+    }
+    div.body {
+        background-color: #F0F0F0;
+        margin-top: 1em;
+        padding: 1em;
+        font-family: monospace;
+        overflow-x: auto;
+        width: 1024px;
+    }
+</style>
+</head>
+<body>
+    <table class="requests">
+        <tr>
+            <th>Date / time</th>
+            <th>Status</th>
+            <th>Remore addr</th>
+            <th>Request</th>
+            <th>Main err</th>
+            <th></th>
+        </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:05 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0MVQEq9fCgz93InyHuAAAAAM</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=100</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:21 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0QeumGwytg-uY-s0@-wAAAAQ</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cache-Control</tt></td>
+                                <td><tt>max-age=0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=100</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:22 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0QuumGwytg-uY-s0-AQAAAAQ</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cache-Control</tt></td>
+                                <td><tt>max-age=0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=98</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:22 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0QuumGwytg-uY-s0-AwAAAAQ</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cache-Control</tt></td>
+                                <td><tt>max-age=0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=96</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:23 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0Q@umGwytg-uY-s0-BQAAAAQ</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cache-Control</tt></td>
+                                <td><tt>max-age=0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=94</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+            <tr class="overview">
+            <td>19/Jul/2022:18:13:23 +0000</td>
+            <td><tt>403</tt></td>
+            <td><tt>186.115.71.176</tt></td>
+            <td><tt>GET /?abc=../../ HTTP/1.1</tt></td>
+            <td>
+                
+                    Path Traversal Attack (/../)
+                
+            </td>
+            <td><a href="#" onClick="return showDetails(this);">Details</a></td>
+            </tr>
+
+            <tr class="details">
+            <td colspan="6">
+                <div class="details">
+                    <h2>ModSecurity Transaction ID</h2>
+                    <p><tt>Ytb0Q@umGwytg-uY-s0-BwAAAAQ</tt></p>
+
+                    <h2>Errors</h2>
+                    
+                        <table class="details">
+                            <tr>
+                                <th>Rule ID</th>
+                                <th>File</th>
+                                <th>Line</th>
+                                <th>Msg</th>
+                            </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930100</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>47</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>930110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APPLICATION-ATTACK-LFI.conf</tt></td>
+                                    <td><tt>71</tt></td>
+                                    <td>Path Traversal Attack (/../)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>949110</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf</tt></td>
+                                    <td><tt>93</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Score: 30)</td>
+                                </tr>
+                            
+                                <tr>
+                                    <td class="nowrap"><tt>980130</tt></td>
+                                    <td class="nowrap"><tt>/etc/modsecurity/owasp-modsecurity-crs/rules/RESPONSE-980-CORRELATION.conf</tt></td>
+                                    <td><tt>91</tt></td>
+                                    <td>Inbound Anomaly Score Exceeded (Total Inbound Score: 30 - SQLI=0,XSS=0,RFI=0,LFI=30,RCE=0,PHPI=0,HTTP=0,SESS=0): individual paranoia level scores: 30, 0, 0, 0</td>
+                                </tr>
+                            
+                        </table>
+                    
+
+                    <h2>Request</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Host</tt></td>
+                                <td><tt>ozone2restored.ozonegroup.co</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>keep-alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cache-Control</tt></td>
+                                <td><tt>max-age=0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua</tt></td>
+                                <td><tt>&#34;.Not/A)Brand&#34;;v=&#34;99&#34;, &#34;Google Chrome&#34;;v=&#34;103&#34;, &#34;Chromium&#34;;v=&#34;103&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-mobile</tt></td>
+                                <td><tt>?0</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>sec-ch-ua-platform</tt></td>
+                                <td><tt>&#34;macOS&#34;</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Upgrade-Insecure-Requests</tt></td>
+                                <td><tt>1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>User-Agent</tt></td>
+                                <td><tt>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept</tt></td>
+                                <td><tt>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Site</tt></td>
+                                <td><tt>none</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Mode</tt></td>
+                                <td><tt>navigate</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-User</tt></td>
+                                <td><tt>?1</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Sec-Fetch-Dest</tt></td>
+                                <td><tt>document</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Encoding</tt></td>
+                                <td><tt>gzip, deflate, br</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Accept-Language</tt></td>
+                                <td><tt>en-US,en;q=0.9</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Cookie</tt></td>
+                                <td><tt>tk_or=%22%22; tk_lr=%22%22; _ga=GA1.2.204503111.1650737209; _fbp=fb.1.1651075659451.674901066; _gid=GA1.2.1120395837.1658161449; wordpress_sec_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cp4nhVohUWn1MIJlAWsITMgzRA1EyRPq7qBv1DHqn0Cy%7C3733df8c19a645d4d035482e1d832bac979fa197c7e2c8c6868bffa523e5eca6; wordpress_logged_in_58ef3927c5511322577a6ebb44ef7663=pedroconsuegrat%7C1658426740%7Cj0hSAwTuKggLKSTv5QkltJ69dI5lbzFaGTQi1cgUPUI%7Cfcb23b3d5be5d083f01a0518d4eceb16cf6a81e7b1c99444362c399049b97a0b</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <p><i>No request body</i></p>
+                    
+
+                    <h2>Response</h2>
+                    <table class="details">
+                        <tr>
+                            <th>Header</th>
+                            <th>Value</th>
+                        </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Length</tt></td>
+                                <td><tt>294</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Keep-Alive</tt></td>
+                                <td><tt>timeout=5, max=92</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Connection</tt></td>
+                                <td><tt>Keep-Alive</tt></td>
+                            </tr>
+                        
+                            <tr>
+                                <td><tt>Content-Type</tt></td>
+                                <td><tt>text/html; charset=iso-8859-1</tt></td>
+                            </tr>
+                        
+                    </table>
+
+                    
+                        <h3>Body</h3>
+                        <div class="body">&lt;!DOCTYPE HTML PUBLIC &#34;-//IETF//DTD HTML 2.0//EN&#34;&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;title&gt;403 Forbidden&lt;/title&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Forbidden&lt;/h1&gt;
+&lt;p&gt;You don&#39;t have permission to access this resource.&lt;/p&gt;
+&lt;hr&gt;
+&lt;address&gt;Apache/2.4.41 (Ubuntu) Server at ozone2restored.ozonegroup.co Port 443&lt;/address&gt;
+&lt;/body&gt;&lt;/html&gt;
+</div>
+                    
+                </div>
+            </td>
+            </tr>
+        
+    </table>
+
+    <script>
+        function showDetails(el) {
+            console.log("triggered");
+            detailsTableRow = el.parentElement.parentElement.nextSibling.nextSibling;
+            console.log(detailsTableRow.style.display);
+            if (detailsTableRow.style.display != "table-row") {
+                detailsTableRow.style.display = "table-row";
+            } else {
+                detailsTableRow.style.display = "none";
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

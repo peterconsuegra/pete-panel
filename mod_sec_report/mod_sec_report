@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+import sys, argparse, json, codecs, shlex, datetime, gzip, re, collections
+from jinja2 import Template
+
+# --- New, regex-based ModSecurity message parser ---------------------
+_PAIR_RE = re.compile(r'\[(\w+)\s+"([^"]*)"\]')  # captures [key "value"]
+
+def parse_modsec_error_msg(err_msg):
+    """
+    Accepts either a raw ModSecurity error string like:
+      Access denied ... [id "949110"] [msg "SQL Injection"] [file "/etc/..."] [line "123"] [tag "..."] ...
+    or a dict (already parsed by upstream pipeline).
+
+    Returns a dict with keys like id, msg, file, line, tag, severity, etc.
+    """
+    if isinstance(err_msg, dict):
+        # Normalize to str keys and ensure "msg" present
+        out = {str(k): v for k, v in err_msg.items()}
+        out.setdefault("msg", out.get("message", ""))
+        return out
+
+    s = str(err_msg or "")
+    out = {}
+
+    # Extract [key "value"] pairs
+    for m in _PAIR_RE.finditer(s):
+        k, v = m.group(1), m.group(2)
+        out[k] = v
+
+    # Fallback for main message (text before the first bracket)
+    # e.g. "Access denied with code 403 (phase 2). Match of ... [id "..."] ..."
+    head = s.split(" [", 1)[0].strip()
+    if head and "msg" not in out:
+        out["msg"] = head
+
+    # Ensure common fields exist even if missing
+    out.setdefault("id", "")
+    out.setdefault("file", "")
+    out.setdefault("line", "")
+    return out
+# ---------------------------------------------------------------------
+
+def parse_dt(s):
+    # "22/Oct/2025:10:57:05.159222 +0000" -> strip microseconds for strptime
+    s = re.sub(r'\..{0,6}', "", s)
+    return datetime.datetime.strptime(s, "%d/%b/%Y:%H:%M:%S %z")
+
+def parse_modsec_line(line):
+    entry = json.loads(line)
+    t = entry.get("transaction", {})
+    req = entry.get("request", {})
+    aud = entry.get("audit_data", {})
+    res = entry.get("response", {})
+
+    t_time = t.get("time", "")
+    try:
+        entry["transaction"]["time_parsed"] = parse_dt(t_time)
+    except Exception:
+        entry["transaction"]["time_parsed"] = None
+
+    # Normalize request body (avoid huge memory; keep first chunk)
+    if "body" in req and isinstance(req["body"], list) and len(req["body"]) > 0:
+        req["body"] = [req["body"][0].encode("ascii", errors="ignore").decode("utf8")]
+    else:
+        req["body"] = []
+
+    # Parse error_messages (string or dict variants)
+    entry["errors"] = []
+    raw_errors = aud.get("error_messages", [])
+    if isinstance(raw_errors, dict):
+        raw_errors = [raw_errors]
+    for err_msg in raw_errors:
+        try:
+            entry["errors"].append(parse_modsec_error_msg(err_msg))
+        except Exception:
+            continue
+
+    # Safe defaults
+    res.setdefault("status", 0)
+    req.setdefault("request_line", "?")
+    t.setdefault("remote_address", "?")
+
+    return entry
+
+def parse_modsec_file(path):
+    fh = gzip.open(path, "rt", errors="replace", encoding="utf-8") if path.endswith(".gz") \
+         else open(path, "r", errors="replace", encoding="utf-8")
+    parsed = []
+    for i, line in enumerate(fh, 1):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            parsed.append(parse_modsec_line(line))
+        except Exception as err:
+            sys.stderr.write(f"Couldn't parse line {i} of {path}. Skipping. Error = {err}\n")
+    fh.close()
+    return parsed
+
+def summarize(entries):
+    by_status = collections.Counter()
+    by_rule = collections.Counter()
+    by_ip = collections.Counter()
+    by_uri = collections.Counter()
+    blocked = 0
+
+    for e in entries:
+        status = int(e.get("response", {}).get("status", 0) or 0)
+        by_status[status] += 1
+        ip = e.get("transaction", {}).get("remote_address", "?")
+        req_line = e.get("request", {}).get("request_line", "?")
+        if req_line:
+            parts = req_line.split()
+            if len(parts) >= 2:
+                by_uri[parts[1]] += 1
+
+        if e["errors"]:
+            for err in e["errors"]:
+                rid = (err.get("id") or "unknown")
+                if rid != "unknown":
+                    by_rule[rid] += 1
+
+        if status in (403, 406) or any("Anomaly Score" in (err.get("msg","") or "") for err in e["errors"]):
+            blocked += 1
+            by_ip[ip] += 1
+
+    total = len(entries)
+    return {
+        "total": total,
+        "blocked": blocked,
+        "by_status": by_status.most_common(),
+        "top_rules": by_rule.most_common(10),
+        "top_ips": by_ip.most_common(10),
+        "top_uris": by_uri.most_common(10),
+    }
+
+def output(entries):
+    with open("mod_sec_report.tpl") as f:
+        template = Template(f.read())
+    summary = summarize(entries)
+    print(template.render(entries=entries, summary=summary))
+
+if __name__ == "__main__":
+    p = argparse.ArgumentParser(description="ModSecurity Report generator")
+    p.add_argument("logfiles", metavar="LOGFILES", type=str, nargs="+", help="ModSec JSON audit log files")
+    args = p.parse_args()
+
+    entries = []
+    for logfile in args.logfiles:
+        entries.extend(parse_modsec_file(logfile))
+
+    # Newest first; entries without a timestamp go last
+    entries.sort(
+        key=lambda e: (e["transaction"].get("time_parsed")
+                       or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)),
+        reverse=True
+    )
+
+    output(entries)
