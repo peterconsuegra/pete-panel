@@ -41,5 +41,5 @@ composer.lock
 auth.json
 mod_sec_report/modsec-audit.html
 .DS_Store
-
+prompt.env
 prompt.txt
