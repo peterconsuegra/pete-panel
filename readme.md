@@ -1,82 +1,146 @@
-# What Is Pete Panel?
+# Pete Panel – Laravel Hosting Control Panel for WordPress & Hybrid Apps
 
-Pete Panel is the developer-first control panel for launching, cloning, migrating, and syncing WordPress and Laravel projects in minutes.
+> Self-hosted Docker-based control panel for launching, migrating, cloning, and scaling WordPress and Laravel applications.
 
-Powered by an optimized Docker LAMP stack, it delivers massive scalability and can support billions of visits on low-cost cloud infrastructure. With production-ready environments, free SSL, OWASP-level security, and phpMyAdmin included, Pete gives you a simpler, faster, and more efficient way to build and scale modern websites and hybrid WordPress and Laravel applications.
+Pete Panel is a **commercial Laravel hosting control panel** built for developers, agencies, and SaaS founders who want full control over their infrastructure without complex DevOps overhead.
 
-Watch Pete Panel launch, clone, and sync WordPress and Laravel projects in minutes.
+It combines:
 
-A smarter way to build: sync WordPress with Laravel
+- 🚀 WordPress deployment & migration tools
+- ⚙️ Laravel application management
+- 🐳 Optimized Docker LAMP stack
+- 🔐 Production-grade security (SSL + OWASP CRS)
+- 🔄 One-click cloning & backup exports
 
-Let WordPress handle your marketing pages, subscriptions, orders, payments, ad pixel tracking, and more by leveraging its vast and battle-tested plugin ecosystem. Meanwhile, Laravel powers your custom client-side features built in React or any modern JavaScript framework. This pairing gives you the power and flexibility of a full framework with the speed and convenience of a CMS, cutting development time and accelerating MVP launches by up to 10x.
-
-From setup to scalability, accelerate your entire workflow with Pete.
-Whether you’re building in WordPress, Laravel, or syncing WordPress with Laravel, Pete gives you the speed, security, and control to ship faster and smarter.
-
-One-Click Migrate, Deploy & Clone
-Spin up new sites, migrate or duplicate existing ones instantly.
-
-Performance You Can Feel
-Deploy projects optimized with industry best practices. Leverage Apache’s MPM Event for efficient request handling and HTTP/2 for lightning-fast content delivery across any framework.
-
-Security First by Design
-Every site includes free SSL via Let’s Encrypt and OWASP CRS web-application protection. Stay secure out of the box and spend more time building, not patching.
-
-Laravel + WordPress + Beyond
-Combine frameworks seamlessly. Use WordPress for content, SEO, and marketing — and power your custom dashboards, APIs, or automations with Laravel or any PHP backend.
-
-Built on Docker Best Practices
-Pete runs on Docker for rock-solid consistency, portability, and scalability — ensuring your local setup matches production every time.
-
-Dev Playgrounds for Experimentation
-Test plugins, debug features, or prototype new ideas using your favorite editor inside Pete’s dedicated development playgrounds.
-
-Switch PHP Versions Instantly
-Toggle between PHP versions on the fly to test compatibility or performance — no reconfiguration needed.
-
-Backup & Restore with Confidence
-Export complete environments anytime in Pete format for extra peace of mind beyond your hosting provider’s backups.
-
-Database Control Made Simple
-Manage and debug your databases visually with phpMyAdmin — pre-installed and ready to use in every environment.
-
-✅ In short: Pete Panel is your all-in-one control panel for modern web development  engineered for speed, security, and simplicity so you can build and launch projects faster than ever.
+If you're searching for a **Laravel control panel**, **WordPress Docker hosting solution**, or a way to **integrate WordPress with Laravel**, Pete Panel was built for you.
 
 ---
 
-## ⚠️ License & Legal
+# 🚀 Why Pete Panel?
 
-**All rights reserved. Pete Panel is _not_ open source.**  
-Commercial licenses are available at **https://deploypete.com**.  
-Unauthorized copying, modification, distribution, or use is strictly prohibited.
+Modern projects need more than shared hosting.
+
+Pete Panel gives you a **developer-first hosting platform** that lets you:
+
+- Launch WordPress sites instantly
+- Deploy Laravel apps in isolated containers
+- Clone production environments in minutes
+- Migrate WordPress sites with one click
+- Run hybrid WordPress + Laravel architectures
+- Manage multiple projects from a unified dashboard
+
+All powered by Docker for consistency between local and production environments.
 
 ---
 
-## Tech Stack
+# 🧠 WordPress + Laravel Architecture (Hybrid Stack)
 
-- **Laravel**: 10.x  
-- **PHP**: 8.1 / 8.2 / 8.3  
-- **Docker LAMP**: Apache + PHP-FPM + MySQL  
-- Selected Composer packages:
-  - `ifsnop/mysqldump-php`
-  - `thamaraiselvam/mysql-import`
-  - `laravel/sanctum`, `laravel/ui`, etc.
+### Use WordPress For:
+- Landing pages
+- SEO optimization
+- WooCommerce & payments
+- Subscriptions
+- Marketing automation
+- Plugin ecosystem
 
-> This repository assumes you run Pete inside the provided Docker environment. The app source lives in `/var/www/html`.
+### Use Laravel For:
+- SaaS platforms
+- Custom dashboards
+- APIs
+- Business logic
+- React / Vue frontends
+- Automation systems
 
+This hybrid approach can reduce MVP build time by up to **10x**.
 
-## Otimpize app
+---
 
-php artisan route:cache
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
+# ⚡ Core Features
 
-## Test in Development with Katelon Recorder
-Delete all site with the admin
-Enter to http://pete.petelocal.net/phpmyadmin/ and delete the users
-Logout from http://pete.petelocal.net/phpmyadmin/
-Uninstall all the plugins
-Delete all backups
-Delete WordPres+Laravel apps
-Run all th test again
+## ✅ One-Click WordPress Migration
+Import and clone full WordPress environments (files + database) instantly.
+
+## ✅ Laravel App Deployment
+Create and manage Laravel 10.x applications inside Docker containers.
+
+## ✅ Docker LAMP Stack (Optimized)
+- Apache MPM Event
+- HTTP/2 enabled
+- PHP 8.2 / 8.3
+- MySQL
+- Container isolation
+
+## ✅ Security Built-In
+- Free SSL via Let’s Encrypt
+- OWASP CRS protection
+- Hardened server configuration
+
+## ✅ PHP Version Switching
+Toggle between PHP versions without manual reconfiguration.
+
+## ✅ Backup & Export System
+Export full environments in Pete format for migration or disaster recovery.
+
+## ✅ phpMyAdmin Included
+Visual database management out of the box.
+
+---
+
+# 🔌 Pete Panel Premium Plugin Ecosystem
+
+## 1️⃣ WordPress + Laravel Plugin
+https://github.com/peterconsuegra/wordpress-plus-laravel-plugin
+
+## 2️⃣ WordPress Importer Plugin
+https://github.com/peterconsuegra/wordpress-importer-plugin
+
+## 3️⃣ Laravel Manager Plugin
+https://github.com/peterconsuegra/laravel-manager-plugin
+
+---
+
+# 🏗 Tech Stack
+
+- Laravel 10.x
+- PHP 8.1 / 8.2 / 8.3
+- Docker
+- Apache + PHP-FPM
+- MySQL
+
+Key Composer Packages:
+- ifsnop/mysqldump-php
+- thamaraiselvam/mysql-import
+- pion/laravel-chunk-upload
+- laravel/sanctum
+- laravel/ui
+
+---
+
+# 🎯 Who Is Pete Panel For?
+
+- Laravel developers who need a self-hosted control panel
+- WordPress agencies managing multiple clients
+- SaaS founders building hybrid stacks
+- Developers tired of cPanel limitations
+- Teams wanting Docker consistency without DevOps complexity
+
+---
+
+# ⚠️ License & Legal
+
+Pete Panel is a **commercial product. Not open source.**
+
+Commercial licenses available at:
+https://deploypete.com
+
+All rights reserved.
+
+---
+
+# 🌍 Official Website
+
+https://deploypete.com
+
+---
+
+## 🚀 Build Faster. Scale Smarter. Control Everything.
