@@ -1,0 +1,21 @@
+Options -Indexes
+
+<FilesMatch "(?i)\.(jpg|jpeg|png|gif|webp|svg|pdf|mp4|mov|mp3|wav|txt|zip)$">
+    Require all granted
+</FilesMatch>
+
+<FilesMatch "(?i)\.(php|php3|php4|php5|php7|php8|phtml|phar|pl|py|cgi|asp|aspx|js|sh|exe|bat|cmd|dll|msi|bin)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
