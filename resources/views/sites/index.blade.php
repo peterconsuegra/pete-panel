@@ -147,17 +147,6 @@
                                 <span v-else>Generate SSL</span>
                               </button>
 
-                              <!-- Clone -->
-                              <button type="button"
-                                      :id="`clone_${site.name}`"
-                                      class="btn btn-outline-secondary"
-                                      :data-site-id="site.id"
-                                      :data-site-name="site.name"
-                                      @click="openCloneModal($event)"
-                                      title="Clone site">
-                                <i class="bi bi-files"></i> Clone
-                              </button>
-
                               <!-- Backup -->
                               <button
                                 :id="`backup_${site.name}`"
@@ -166,22 +155,8 @@
                                 :data-site-name="site.name"
                                 @click="openBackupModal($event)"
                                 title="Create backup">
-                                <i class="bi bi-hdd"></i> Export
+                                <i class="bi bi-hdd"></i> Create Backup
                               </button>
-
-                              <select
-                                class="form-select form-select-sm ms-2"
-                                style="min-width: 170px; width: 170px"
-                                :value="site.backup_days"
-                                @change="onBackupDaysChange(site, $event)"
-                                :disabled="isBusy(site.id)"
-                                title="How many days of backups to keep for this site"
-                              >
-                                <option value="0">Backups disabled</option>
-                                <option value="1">1 day backup</option>
-                                <option value="2">2 days backup</option>
-                                <option value="3">3 days backup</option>
-                              </select>
 
                               <!-- Logs -->
                               <a :id="`logs_${site.name}`"
@@ -228,65 +203,6 @@
     </div>
 
     <teleport to="body">
-    {{-- Clone Modal ----------------------------------------------------------- --}}
-    @php
-        $template = $template ?? ($pete_options->get_meta_value('domain_template') ?? null);
-    @endphp
-
-    <div class="modal fade" id="cloneModal" tabindex="-1" aria-labelledby="cloneModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <form class="modal-content" @submit.prevent="submitClone">
-          <div class="modal-header">
-            <h5 class="modal-title" id="cloneModalLabel">Clone Site</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <div class="modal-body">
-            <div v-if="errorMessage" id="clone_error_box" class="alert alert-danger py-2 mb-3">
-              @{{ errorMessage }}
-            </div>
-
-            <input type="hidden" v-model="form.site_to_clone_id">
-
-            <div class="mb-3">
-              <label for="clone_domain" class="form-label">Destination URL</label>
-
-              @if($template && $template !== 'none')
-                <div class="input-group">
-                  <input id="clone_domain"
-                        type="text"
-                        class="form-control"
-                        v-model.trim="form.site_url"
-                        :class="{'is-invalid': !!errors.site_url}"
-                        placeholder="subdomain">
-                  <span class="input-group-text">.{{ $template }}</span>
-                  <div class="invalid-feedback" v-if="errors.site_url">@{{ errors.site_url[0] }}</div>
-                </div>
-                <div class="form-text">Enter only the subdomain; Pete appends the template automatically.</div>
-              @else
-                <input id="clone_domain"
-                      type="text"
-                      class="form-control"
-                      v-model.trim="form.site_url"
-                      :class="{'is-invalid': !!errors.site_url}"
-                      placeholder="e.g. example.com">
-                <div class="invalid-feedback" v-if="errors.site_url">@{{ errors.site_url[0] }}</div>
-              @endif
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button id="clone_site_button" type="submit" class="btn btn-primary" :disabled="loading">
-              <span v-if="loading" class="spinner-border spinner-border-sm me-1"></span>
-              <i v-else class="bi bi-files me-1"></i>
-              Clone Site
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
     {{-- Backup Modal ---------------------------------------------------------- --}}
     <div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="backupModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -345,13 +261,6 @@ const { createApp, nextTick } = Vue;
 createApp({
   data() {
     return {
-      // clone state
-      form: { site_to_clone_id: '', site_url: '' },
-      errors: {},
-      errorMessage: '',
-      loading: false,
-      cloneModal: null,
-
       // backup state
       backup: { site_id: '', backup_label: '' },
       backupErrors: {},
@@ -375,8 +284,6 @@ createApp({
 
   async mounted() {
     await nextTick();
-    const cloneEl  = document.getElementById('cloneModal');
-    if (cloneEl) this.cloneModal = bootstrap.Modal.getOrCreateInstance(cloneEl);
     const backupEl = document.getElementById('backupModal');
     if (backupEl) this.backupModal = bootstrap.Modal.getOrCreateInstance(backupEl);
     this.loadRows();
@@ -407,7 +314,7 @@ createApp({
           url: String(s.url ?? ''),
           ssl: !!s.ssl,
           backup_days: Number(s.backup_days ?? 0),
-          created_at: s.created_at || null, 
+          created_at: s.created_at || null,
         }));
         this.total = Number(this._bootstrapTotal) || this.rows.length || 0;
         this.updateTotalBadge();
@@ -415,47 +322,6 @@ createApp({
         this.loadingRows = false;
       }
     },
-
-    async onBackupDaysChange(site, evt) {
-    const newVal = Number(evt?.target?.value ?? site.backup_days);
-    if (![0,1,2,3].includes(newVal)) {
-      window.toast?.('Invalid selection.', 'warning');
-      return;
-    }
-
-    const prev = site.backup_days;
-    site.backup_days = newVal; // optimistic
-
-    try {
-      const csrf = document.querySelector('meta[name="csrf-token"]').content;
-      const res = await fetch(`/sites/${site.id}/backup-settings`, {
-        method: 'PATCH',
-        credentials: 'same-origin',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'X-CSRF-TOKEN': csrf,
-        },
-        body: JSON.stringify({ backup_days: newVal }),
-      });
-
-      const raw = await res.text();
-      let data = {};
-      try { data = JSON.parse(raw); } catch {}
-
-      if (!res.ok || data.error) {
-        site.backup_days = prev; // rollback
-        window.toast?.(data.message || 'Failed to save backup days.', 'error');
-        return;
-      }
-
-      window.toast?.(data.message || 'Backup days saved.', 'success');
-    } catch {
-      site.backup_days = prev; // rollback
-      window.toast?.('Network error saving backup days.', 'error');
-    }
-  },
 
     updateTotalBadge() {
       const totalEl = document.getElementById('sitesTotalCount');
@@ -532,200 +398,6 @@ createApp({
       }
     },
 
-    /* ---------------- CLONE ---------------- */
-    openCloneModal(evt) {
-      this.resetClone();
-      const btn = evt.currentTarget;
-      this.form.site_to_clone_id = btn.dataset.siteId || '';
-      this.cloneModal?.show();
-      nextTick(() => document.getElementById('clone_domain')?.focus());
-    },
-
-    resetClone() {
-      this.form = { site_to_clone_id: this.form.site_to_clone_id || '', site_url: '' };
-      this.errors = {};
-      this.errorMessage = '';
-      this.loading = false;
-    },
-
-    async submitClone() {
-      // 1) Basic front-end validation
-      if (!this.form.site_url) {
-        const el = document.getElementById('clone_domain');
-        if (el) this.form.site_url = el.value.trim();
-      }
-      if (!this.form.site_url) {
-        this.errors = { site_url: ['Please enter a destination.'] };
-        return;
-      }
-
-      const CLONE_URL = @json(route('sites.clone', [], false));
-      const csrf = document.querySelector('meta[name="csrf-token"]').content;
-
-      this.loading = true;
-      this.errorMessage = '';
-      this.errors = {};
-
-      const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-      // open a terminal toast
-      const destLabel = this.form.site_url;
-      const termId = window.toastTerminal(
-        `Starting clone…`,
-        { title: `Clone • ${destLabel}`, delay: 0, theme: 'light', autoScroll: true }
-      );
-      const tAppend = (line = '') => window.toastTerminalAppend?.(termId, line);
-
-      try {
-        // 2) Enqueue the job
-        const res = await fetch(CLONE_URL, {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': csrf,
-          },
-          body: JSON.stringify(this.form),
-        });
-
-        if (res.redirected) {
-          this.errorMessage = 'Your session expired. Please log in again.';
-          tAppend('✖ Session expired.');
-          window.toast?.(this.errorMessage, 'error');
-          return;
-        }
-
-        const text = await res.text();
-        const data = (() => { try { return JSON.parse(text) } catch { return {} } })();
-
-        if (!res.ok) {
-          if (res.status === 422 && data.errors) {
-            this.errors = data.errors;
-            this.errorMessage = data.message || 'Validation failed.';
-          } else if (res.status === 401 || res.status === 403) {
-            this.errorMessage = data.message || 'You are not allowed to clone this site.';
-          } else {
-            this.errorMessage = data.message || 'Clone failed. Please try again.';
-          }
-          tAppend(`✖ ${this.errorMessage}`);
-          window.toast?.(this.errorMessage, 'error');
-          return;
-        }
-
-        // 3) Success enqueue → begin polling
-        const jobId = data.job_id;
-        const statusUrl = data.status_url;
-        tAppend(`▶ Clone enqueued (job ${jobId})`);
-
-        // close the modal now that the job is running
-        this.cloneModal?.hide();
-
-        let lastProgress = null;
-        let lastMessage = null;
-        let heartbeatCount = 0;
-
-        while (true) {
-          await sleep(700); // poll every 0.7s
-
-          const r = await fetch(statusUrl, {
-            method: 'GET',
-            credentials: 'same-origin',
-            headers: { 'Accept': 'application/json', 'X-Requested-With':'XMLHttpRequest' }
-          });
-
-          if (!r.ok) {
-            heartbeatCount++;
-            if (heartbeatCount % 5 === 0) tAppend('…'); // heartbeat ~10s
-            continue;
-          }
-
-          const st = await r.json().catch(() => ({}));
-
-          const p = typeof st.progress === 'number' ? st.progress : null;
-          const m = st.message || '';
-
-          // append only on change
-          if (p !== lastProgress) {
-            tAppend(`Progress: ${p ?? 0}%`);
-            lastProgress = p;
-            heartbeatCount = 0;
-          }
-          if (m && m !== lastMessage) {
-            tAppend(m);
-            lastMessage = m;
-            heartbeatCount = 0;
-          }
-          if (!m && !p) {
-            heartbeatCount++;
-            if (heartbeatCount % 5 === 0) tAppend('…');
-          }
-
-          // terminal states
-          if (st.status === 'succeeded') {
-            tAppend('✔ Clone completed.');
-            const statusEl = document.querySelector(`[data-toast-id="${termId}"] .terminal-status`);
-            if (statusEl) {
-              statusEl.classList.add('terminal-status--success');
-              statusEl.textContent = 'SUCCESS';
-            }
-            window.toast?.('Clone completed.', 'success');
-
-            // Build and insert the new row at the top
-            const nowIso = new Date().toISOString();
-            const newRow = {
-              id: Number(st.dest_site_id),
-              name: String(st.dest_name || ''),
-              url: String(st.dest_url || ''),
-              ssl: false,
-              backup_days: 0,
-              created_at: nowIso,
-            };
-
-            this.rows.unshift(newRow);
-            this.total = (this.total || 0) + 1;
-            this.updateTotalBadge?.();
-
-            // 🔦 Flash + scroll
-            this.flashId = newRow.id;
-            await nextTick();
-
-            // Remove any previous special id (safety)
-            const prev = document.querySelector(`tr[id="${newRow.name}"]`);
-            if (prev) prev.removeAttribute('id');
-
-            // 🎯 Assign id based on dest_name directly
-            const tr = document.querySelector(`tr[data-row-id="${newRow.id}"]`);
-            if (tr) {
-              const safeId = (st.dest_name || '')
-                .replace(/[^a-z0-9]/gi, ''); // keep only alphanumeric
-              tr.id = safeId || `site_${newRow.id}`;
-              tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-            // clear highlight after animation
-            setTimeout(() => { this.flashId = null; }, 3800);
-
-            return;
-          }
-
-          if (st.status === 'failed') {
-            const msg = st.message || 'Clone failed.';
-            tAppend(`✖ ${msg}`);
-            const statusEl = document.querySelector(`[data-toast-id="${termId}"] .terminal-status`);
-            if (statusEl) { statusEl.classList.add('terminal-status--error'); statusEl.textContent = 'ERROR'; }
-            window.toast?.(msg, 'error');
-            return;
-          }
-        }
-      } catch (e) {
-        tAppend('✖ Network error while enqueuing/polling clone.');
-        window.toast?.('Network error. Please try again.', 'error');
-      } finally {
-        this.loading = false;
-      }
-    },
     /* ---------------- BACKUP ---------------- */
     openBackupModal(evt) {
       this.backup = { site_id: evt.currentTarget.dataset.siteId || '', backup_label: '' };
@@ -847,13 +519,11 @@ createApp({
           if (st.status === 'succeeded') {
             tAppend('✔ Backup completed.');
             if (st.download) {
-              // show a plain URL; terminal allows copy via 📋 button
               tAppend(`Download: ${st.download}`);
             }
             setStatus('success');
             window.toast?.('Backup created.', 'success');
 
-            // ⏳ Wait 2 seconds, then redirect
             setTimeout(() => {
               window.location.href = '/backups';
             }, 2000);
@@ -878,6 +548,7 @@ createApp({
         this.backupLoading = false;
       }
     },
+
     /* ---------------- DELETE ---------------- */
     confirmDelete(site) {
       if (!site?.id) return;
@@ -903,7 +574,6 @@ createApp({
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        // remove from table
         this.rows = this.rows.filter(r => r.id !== id);
         this.total = Math.max(0, this.total - 1);
         this.updateTotalBadge();
