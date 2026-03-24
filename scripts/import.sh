@@ -215,7 +215,7 @@ fi
 
 # ---- apache options -----------------------------------------------------
 if [[ "${server}" == "apache" ]]; then
-  log "Apache mode: permissive dirs + logs + htaccess"
+  log "Apache mode: permissive dirs + logs + root htaccess"
 
   # docker-first: avoid sudo if it isn't non-interactive
   if [[ -n "${SUDO}" ]]; then
@@ -237,8 +237,19 @@ if [[ "${server}" == "apache" ]]; then
   fi
 
   rm -f "${dst_dir}/wp-content/.htaccess" || true
-  rm -f "${dst_dir}/wp-content/uploads/.htaccess" || true
   rm -f "${dst_dir}/wp-includes/.htaccess" || true
+fi
+
+# ---- uploads hardening (always apply) -----------------------------------
+ht_uploads_tpl="${base_path}/templates/htaccess_uploads.txt"
+mkdir -p "${dst_dir}/wp-content/uploads"
+rm -f "${dst_dir}/wp-content/uploads/.htaccess" || true
+
+if [[ -f "${ht_uploads_tpl}" ]]; then
+  cp "${ht_uploads_tpl}" "${dst_dir}/wp-content/uploads/.htaccess"
+  log "Applied uploads htaccess: ${dst_dir}/wp-content/uploads/.htaccess"
+else
+  log "uploads htaccess template missing: ${ht_uploads_tpl}"
 fi
 
 # ---- final perms (lock down wp-config) ----------------------------------

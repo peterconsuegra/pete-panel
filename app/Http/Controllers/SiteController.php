@@ -318,66 +318,115 @@ class SiteController extends Controller {
 
 	
 	public function store(Request $request): RedirectResponse|JsonResponse
-	{
-		// 0) Normalize URL with domain template before validating
-		$tpl     = $this->peteOptions->get_meta_value('domain_template');
-		$fullUrl = $this->pete->normalizeUrlWithTemplate($request->input('url', ''), (string) $tpl);
-		$input   = array_replace($request->all(), ['url' => $fullUrl]);
+{
+	// 0) Normalize URL with domain template before validating
+	$tpl     = $this->peteOptions->get_meta_value('domain_template');
+	$fullUrl = $this->pete->normalizeUrlWithTemplate($request->input('url', ''), (string) $tpl);
+	$input   = array_replace($request->all(), ['url' => $fullUrl]);
 
-		// 1) Validate inputs (no auto-redirects)
-		$v = Validator::make($input, [
-			'url' => [
-				'required',
-				'max:255',
-				'regex:/^(?!\-)(?:[a-z0-9\-]+\.)+[a-z]{2,}$/i',     // host-like (no scheme/slashes)
-				Rule::unique('sites', 'url'),
-			],
-		]);
-		if ($v->fails()) {
-			return $this->pete->fail($request, 'Validation failed.', $v->errors()->toArray(), 422);
-		}
+	// 1) Validate inputs (no auto-redirects)
+	$v = Validator::make($input, [
+		'url' => [
+			'required',
+			'max:255',
+			'regex:/^(?!\-)(?:[a-z0-9\-]+\.)+[a-z]{2,}$/i',
+			Rule::unique('sites', 'url'),
+		],
+	]);
 
-		// Domain/business guards, return field-specific errors
-		if ($this->pete->isTheURLForbidden($fullUrl)) {
-			return $this->pete->fail($request, 'URL forbidden.', [
-				'url' => ['This URL is not allowed.'],
-			], 422);
-		}
-
-		// Prepare model
-		$user = Auth::user();
-		$site          = new Site();
-		$site->user_id = $user->id;
-		$site->url     = $fullUrl;               // already normalized above
-		$site->set_project_name($site->url);
-
-		// 4) Create and reload
-		try {
-			$site->create_wordpress();
-			\App\Services\OServer::reload_server();
-
-			$payload = [
-				'error'    => false,
-				'message'  => 'Site created successfully.',
-				'site_id'  => $site->id,
-				'url'      => $site->url,
-				'redirect' => route('sites.logs', $site->id),
-			];
-
-			return ($request->expectsJson() || $request->ajax())
-				? response()->json($payload, 201)
-				: redirect()->route('sites.logs', $site->id)->with('status', $payload['message']);
-
-		} catch (\Throwable $e) {
-			\Log::error('Site creation failed', ['exception' => $e, 'user_id' => \Auth::id()]);
-			return ($request->expectsJson() || $request->ajax())
-				? response()->json([
-					'error'   => true,
-					'message' => 'Failed to create WordPress site. Please try again.',
-				], 500)
-				: back()->withInput()->withErrors('Failed to create WordPress site. Please try again.');
-		}
+	if ($v->fails()) {
+		return $this->pete->fail($request, 'Validation failed.', $v->errors()->toArray(), 422);
 	}
+
+	// Domain/business guards, return field-specific errors
+	if ($this->pete->isTheURLForbidden($fullUrl)) {
+		return $this->pete->fail($request, 'URL forbidden.', [
+			'url' => ['This URL is not allowed.'],
+		], 422);
+	}
+
+	// Prepare model
+	$user = Auth::user();
+	$site = new Site();
+	$site->user_id = $user->id;
+	$site->url     = $fullUrl;
+	$site->set_project_name($site->url);
+
+	try {
+		// 4) Create site
+		$site->create_wordpress();
+
+		// 5) Force uploads hardening after creation
+		$appRoot      = rtrim((string) $this->peteOptions->get_meta_value('app_root'), '/');
+		$uploadsDir   = $appRoot . '/' . $site->name . '/wp-content/uploads';
+		$templatePath = base_path('templates/htaccess_uploads.txt');
+		$targetPath   = $uploadsDir . '/.htaccess';
+
+		if ($appRoot !== '') {
+			if (! is_dir($uploadsDir)) {
+				@mkdir($uploadsDir, 0755, true);
+			}
+
+			if (is_file($templatePath) && is_readable($templatePath)) {
+				if (! @copy($templatePath, $targetPath)) {
+					\Log::warning('Failed to copy uploads .htaccess after site creation', [
+						'site_id'       => $site->id,
+						'site_name'     => $site->name,
+						'template_path' => $templatePath,
+						'target_path'   => $targetPath,
+					]);
+				} else {
+					@chmod($targetPath, 0644);
+
+					\Log::info('uploads .htaccess applied after site creation', [
+						'site_id'     => $site->id,
+						'site_name'   => $site->name,
+						'target_path' => $targetPath,
+					]);
+				}
+			} else {
+				\Log::warning('uploads .htaccess template missing or unreadable after site creation', [
+					'site_id'       => $site->id,
+					'site_name'     => $site->name,
+					'template_path' => $templatePath,
+				]);
+			}
+		} else {
+			\Log::warning('app_root empty; skipped uploads hardening after site creation', [
+				'site_id'   => $site->id,
+				'site_name' => $site->name,
+			]);
+		}
+
+		// 6) Reload server
+		\App\Services\OServer::reload_server();
+
+		$payload = [
+			'error'    => false,
+			'message'  => 'Site created successfully.',
+			'site_id'  => $site->id,
+			'url'      => $site->url,
+			'redirect' => route('sites.logs', $site->id),
+		];
+
+		return ($request->expectsJson() || $request->ajax())
+			? response()->json($payload, 201)
+			: redirect()->route('sites.logs', $site->id)->with('status', $payload['message']);
+
+	} catch (\Throwable $e) {
+		\Log::error('Site creation failed', [
+			'exception' => $e,
+			'user_id'   => \Auth::id(),
+		]);
+
+		return ($request->expectsJson() || $request->ajax())
+			? response()->json([
+				'error'   => true,
+				'message' => 'Failed to create WordPress site. Please try again.',
+			], 500)
+			: back()->withInput()->withErrors('Failed to create WordPress site. Please try again.');
+	}
+}
 	
 	
 	public function destroy(Request $request, Site $site): Response|RedirectResponse
