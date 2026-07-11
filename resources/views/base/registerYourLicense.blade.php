@@ -32,6 +32,14 @@
                 </div>
 
                 <div class="p-4">
+                    {{-- Upgrade / limit messages flashed by guarded routes --}}
+                    @if ($errors->any())
+                    <div class="alert alert-warning d-flex align-items-start gap-2" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill mt-1"></i>
+                        <div>{{ $errors->first() }}</div>
+                    </div>
+                    @endif
+
                     {{-- License validated alert --}}
                     @if($validate == "YES")
                     <div class="alert alert-success d-flex align-items-start gap-2" role="alert">

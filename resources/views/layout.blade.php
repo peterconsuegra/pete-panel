@@ -297,35 +297,11 @@ tr.row-flash > td {
                     <i class="bi bi-shield-lock"></i> Security
                 </a>
 
-                <a href="/plugins/index" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/plugins') active @endif">
-                    <i class="bi bi-plug"></i> Plugins
-                </a>
-
-                {{-- Dynamic sidebar options you already render --}}
-               @isset($sidebar_options)
-                    @foreach($sidebar_options as $option)
-                        <a href="{{ $option->option_value }}" 
-                        class="list-group-item list-group-item-action sidebar-link @if($viewsw === $option->option_value) active @endif">
-                            <i class="bi bi-chevron-right"></i> 
-
-                            @php
-                            //fix icons
-                            if($option->option_name == "wordpress_laravel")
-                                $title = str_replace('_', '↔', $option->option_name);
-                            else
-                                $title = str_replace('_', ' ', $option->option_name);
-          
-                            @endphp
-                             {{ $title }}
-                        </a>
-                    @endforeach
-                @endisset
+              <a href="/wordpress-importer" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/wordpress-importer') active @endif">
+                    <i class="bi bi-plug"></i> Import
+              </a>
 
                  {{-- Admin-only --}}
-
-                    <a href="{{ route('admin.server.ssh') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/serverSSH') active @endif">
-                        <i class="bi bi-key"></i> SSH key
-                    </a>
 
                     <a href="{{ route('admin.server.status') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/serverStatus') active @endif">
                         <i class="bi bi-speedometer2"></i> Server Status

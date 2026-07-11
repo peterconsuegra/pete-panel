@@ -214,6 +214,12 @@ class SiteController extends Controller {
 
 	public function cloneSite(Request $request): RedirectResponse|JsonResponse
 	{
+		if ($this->pete->siteLimitReached()) {
+			return $this->pete->fail($request, PeteService::UPGRADE_MESSAGE, [
+				'license' => [PeteService::UPGRADE_MESSAGE],
+			], 403);
+		}
+
 		// 0) Normalize destination first (strip scheme, append domain template if needed)
 		$tpl       = $this->peteOptions->get_meta_value('domain_template');
 		$rawInput  = (string) $request->input('site_url', '');
@@ -310,8 +316,11 @@ class SiteController extends Controller {
 			: redirect()->route('sites.logs', 0)->with('status', $payload['message']);
 	}
 	
-	public function create(){   
-		$currentUser = Auth::user(); 
+	public function create(){
+		if ($this->pete->siteLimitReached()) {
+			return redirect('/register-your-license')->withErrors(PeteService::UPGRADE_MESSAGE);
+		}
+		$currentUser = Auth::user();
 		$viewsw      = 'sites';
 		return view('sites.create',compact('currentUser','viewsw'));
 	}
@@ -319,6 +328,12 @@ class SiteController extends Controller {
 	
 	public function store(Request $request): RedirectResponse|JsonResponse
 {
+	if ($this->pete->siteLimitReached()) {
+		return $this->pete->fail($request, PeteService::UPGRADE_MESSAGE, [
+			'license' => [PeteService::UPGRADE_MESSAGE],
+		], 403);
+	}
+
 	// 0) Normalize URL with domain template before validating
 	$tpl     = $this->peteOptions->get_meta_value('domain_template');
 	$fullUrl = $this->pete->normalizeUrlWithTemplate($request->input('url', ''), (string) $tpl);

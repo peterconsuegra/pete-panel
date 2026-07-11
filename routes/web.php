@@ -102,3 +102,11 @@ Route::get('/register', 'Auth\RegisterController@register');
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+// WordPress Importer — migrated from peteconsuegra/wordpress-importer-plugin
+Route::middleware(["web"])->group(function () {
+    Route::get("/wordpress-importer", [\App\Http\Controllers\WordPressImporterController::class, "create"])->name("wpimport.create");
+    Route::post("/wordpress-importer", [\App\Http\Controllers\WordPressImporterController::class, "store"])->name("wpimport.store");
+    Route::get("/wordpress-importer/status/{id}", [\App\Http\Controllers\WordPressImporterController::class, "status"])->name("wpimport.status");
+    Route::post("/wordpress-importer/upload-chunk", [\App\Http\Controllers\WordPressImporterController::class, "upload"])->name("wpimport.chunk.upload");
+    Route::delete("/wordpress-importer/upload-chunk/abort", [\App\Http\Controllers\WordPressImporterController::class, "abort"])->name("wpimport.chunk.abort");
+});

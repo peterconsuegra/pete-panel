@@ -59,7 +59,7 @@ class AdIndex
 
         // Decide if we should run license checks for this request
         $isWpPlusLaravel  = $controllerClass === 'Pete\WordPressPlusLaravel\Http\WordPressPlusLaravelController';
-        $isWpImporter     = $controllerClass === 'Pete\WordPressImporter\Http\WordPressImporterController';
+        $isWpImporter     = $controllerClass === \App\Http\Controllers\WordPressImporterController::class;
         $isPeteBackups    = $controllerClass === 'Pete\PeteBackups\Http\PeteBackupsController';
         $isPluginsInstall = $controllerMethod === 'runPluginInstallScript';
 
@@ -69,35 +69,17 @@ class AdIndex
             if ($domain_template === 'petelocal.net') {
                 $validate = 'YES';
             } else {
-                // Check current validation status
+                // Silently renew the signed grant when it is missing or near
+                // expiry (uses the stored license key; also migrates legacy
+                // registrations), then verify offline. Replaces the old
+                // validation_event re-check, which re-sent the derived
+                // api_key instead of the license key and could never pass.
+                $this->pete->renewLicenseIfNeeded();
                 $validate = $this->pete->checkPeteLicense() ?: 'NO';
             }
 
             if ($validate === 'NO') {
                 return redirect('/register-your-license');
-            }
-
-            // If validation event has passed, re‑validate (only for non-petelocal.net)
-            $validationEventStr = $pete_options->get_meta_date('validation_event');
-            $validation_event   = $validationEventStr ? new DateTime($validationEventStr) : null;
-            $now                = new DateTime();
-
-            if ($validation_event && $now > $validation_event && $domain_template !== 'petelocal.net') {
-                $apiKey   = $pete_options->get_meta_value('validation_api_key');
-                $email    = $pete_options->get_meta_value('validation_user_email');
-                $domain   = $pete_options->get_meta_value('validation_domain');
-
-                $this->pete->validatePete($email, $apiKey, $domain);
-                $validate = $this->pete->checkPeteLicense() ?: 'NO';
-
-                if ($validate === 'NO') {
-                    // Clean up and force re-registration
-                    Option::delete_meta_value('validation_event');
-                    Option::delete_meta_value('validation_api_key');
-                    Option::delete_meta_value('token');
-
-                    return redirect('/register-your-license');
-                }
             }
         }
 

@@ -18,6 +18,8 @@ use App\Standard\License;
 class PeteService
 {
 
+    public const UPGRADE_MESSAGE = 'Please upgrade your license to create more sites.';
+
     private const OPTIONS_CACHE_KEY = 'options.map.v1';
     private const SIDEBAR_OPTIONS_CACHE_KEY = 'sidebar.map.v1';
     private const LAST_VERSION_CACHE_KEY = 'last.version.map.v1';
@@ -33,8 +35,168 @@ class PeteService
         $options = $this->options;
     }
     
-    public function validatePete($oemail,$oapi_key,$odomain){
-		
+    /**
+     * Entry point used by the Register form. Tries the v2 signed-grant flow
+     * first; when the store predates v2 (endpoint missing) it falls back to
+     * the legacy md5 handshake below.
+     */
+    public function validatePete($oemail, $oapi_key, $odomain)
+    {
+        $v2 = $this->validatePeteV2($oemail, $oapi_key, $odomain);
+        if ($v2 !== null) {
+            return $v2;
+        }
+
+        return $this->validatePeteLegacy($oemail, $oapi_key, $odomain);
+    }
+
+    /**
+     * v2: exchange email + license key for an Ed25519-signed grant, verified
+     * against config('pete.license_public_key') before it is stored.
+     * Returns ["validation" => "ok"], ["message" => ...], or null when the
+     * store has no v2 endpoint (caller falls back to legacy).
+     */
+    public function validatePeteV2(string $email, string $licenseKey, string $domain): ?array
+    {
+        $dashboardUrl = rtrim((string) env('PETE_DASHBOARD_URL'), '/');
+        $publicKey    = (string) config('pete.license_public_key');
+
+        if ($dashboardUrl === '' || $publicKey === '') {
+            return null; // v2 not configured on this install
+        }
+
+        $context = stream_context_create([
+            'http' => [
+                'method'        => 'POST',
+                'timeout'       => 30,
+                'ignore_errors' => true,
+                'header'        => "Content-Type: application/json\r\nAccept: application/json\r\n",
+                'content'       => json_encode([
+                    'email'       => $email,
+                    'license_key' => $licenseKey,
+                    'domain'      => $domain,
+                ]),
+            ],
+        ]);
+
+        $raw    = @file_get_contents("$dashboardUrl/validate_license_v2", false, $context);
+        $result = $raw !== false ? json_decode($raw) : null;
+
+        if (!is_object($result) || (!isset($result->grant) && !isset($result->message))) {
+            Log::warning('License v2 endpoint unavailable, falling back to legacy', ['raw' => is_string($raw) ? substr($raw, 0, 200) : null]);
+            return null;
+        }
+
+        if (isset($result->message)) {
+            return ['message' => $result->message];
+        }
+
+        if (!$this->verifyGrantSignature((string) $result->grant, (string) $result->signature, $publicKey)) {
+            return ['message' => 'The license server returned a grant with an invalid signature.'];
+        }
+
+        foreach ([
+            'license_grant'         => (string) $result->grant,
+            'license_signature'     => (string) $result->signature,
+            'license_key'           => $licenseKey,
+            'validation_user_email' => $email,
+            'validation_domain'     => $domain,
+        ] as $name => $value) {
+            Option::delete_meta_value($name);
+            $option = new Option();
+            $option->option_name  = $name;
+            $option->option_value = $value;
+            $option->visible      = false;
+            $option->save();
+        }
+
+        Cache::forget(self::OPTIONS_CACHE_KEY);
+
+        return ['validation' => 'ok'];
+    }
+
+    /**
+     * Offline check of the stored v2 grant: signature valid (public key
+     * only — the private half never leaves the store) and not expired.
+     */
+    public function checkPeteLicenseV2(): string
+    {
+        $pete_options = new \App\Services\PeteOption();
+        $grant        = (string) $pete_options->get_meta_value('license_grant');
+        $signature    = (string) $pete_options->get_meta_value('license_signature');
+        $publicKey    = (string) config('pete.license_public_key');
+
+        if ($grant === '' || $signature === '' || $publicKey === '') {
+            return 'NO';
+        }
+
+        if (!$this->verifyGrantSignature($grant, $signature, $publicKey)) {
+            return 'NO';
+        }
+
+        $payload = json_decode($grant);
+        if (!is_object($payload) || !isset($payload->expires_at)) {
+            return 'NO';
+        }
+
+        return strtotime((string) $payload->expires_at) > time() ? 'YES' : 'NO';
+    }
+
+    /**
+     * Renew the grant when it is missing, expired, or expiring within two
+     * days — using the stored license key (or migrating from the legacy
+     * "token" option, which holds the same PETE-... key). Silent on failure:
+     * checkPeteLicense() simply keeps returning its current verdict.
+     */
+    public function renewLicenseIfNeeded(): void
+    {
+        $pete_options = new \App\Services\PeteOption();
+        $grant        = (string) $pete_options->get_meta_value('license_grant');
+        $licenseKey   = (string) $pete_options->get_meta_value('license_key');
+        $email        = (string) $pete_options->get_meta_value('validation_user_email');
+        $domain       = (string) $pete_options->get_meta_value('validation_domain');
+
+        // Migration path: legacy installs stored the PETE key as "token".
+        if ($licenseKey === '') {
+            $licenseKey = (string) $pete_options->get_meta_value('token');
+        }
+        if ($licenseKey === '' || $email === '') {
+            return;
+        }
+
+        if ($grant !== '') {
+            $payload   = json_decode($grant);
+            $expiresAt = is_object($payload) && isset($payload->expires_at) ? strtotime((string) $payload->expires_at) : 0;
+            if ($expiresAt > time() + 2 * 86400) {
+                return; // still comfortably valid
+            }
+        }
+
+        try {
+            $this->validatePeteV2($email, $licenseKey, $domain);
+        } catch (\Throwable $e) {
+            Log::warning('License grant renewal failed', ['error' => $e->getMessage()]);
+        }
+    }
+
+    private function verifyGrantSignature(string $grant, string $signature, string $publicKeyB64): bool
+    {
+        $sig = base64_decode($signature, true);
+        $pub = base64_decode($publicKeyB64, true);
+
+        if ($sig === false || $pub === false || strlen($pub) !== SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+            return false;
+        }
+
+        try {
+            return sodium_crypto_sign_verify_detached($sig, $grant, $pub);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    public function validatePeteLegacy($oemail,$oapi_key,$odomain){
+
  		$dashboard_url = env("PETE_DASHBOARD_URL");
 		
  		$data = array(
@@ -132,6 +294,14 @@ class PeteService
 
     public function checkPeteLicense(){
 
+        // v2: Ed25519-signed grant, verifiable offline and unforgeable
+        // without the store's private key.
+        if ($this->checkPeteLicenseV2() === 'YES') {
+            return 'YES';
+        }
+
+        // Legacy md5 handshake, kept so installs registered before v2 stay
+        // valid until their next renewal migrates them.
         $pete_options = app(\App\Services\PeteOption::class);
 
         $validation_api_key = $pete_options->get_meta_value('validation_api_key');
@@ -149,7 +319,22 @@ class PeteService
 		
  		return $validate;
  	}
-    
+
+    /**
+     * Freemium guard: without a validated license Pete allows a single site.
+     * Create, import and clone flows must check this before adding a site.
+     */
+    public function siteLimitReached(): bool
+    {
+        $this->renewLicenseIfNeeded();
+
+        if ($this->checkPeteLicense() === 'YES') {
+            return false;
+        }
+
+        return \App\Models\Site::query()->count() >= 1;
+    }
+
 
     public function getOptions(): Collection
     {
