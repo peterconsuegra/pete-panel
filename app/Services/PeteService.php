@@ -355,55 +355,68 @@ class PeteService
                 ->toBase();
     }
 
-    public function getLastVersion(): ?float
+    /**
+     * Latest published Pete Panel version, from the store's public REST
+     * endpoint (GET /wp-json/pete/v1/latest-version, itself cached
+     * server-side). Cached here too, so the sites screen never blocks on
+     * the network; failures are not cached and return null.
+     */
+    public function getLastVersion(): ?string
 	{
+		$cached = Cache::get(self::LAST_VERSION_CACHE_KEY);
+		if (is_string($cached) && $cached !== '') {
+			return $cached;
+		}
+
 		try {
-			$parentVersion = (string) ($this->options->get('parent_version')->option_value ?? '');
-            Log::info("enter in getLastVersion");
-            Log::info($parentVersion);
-			$dashboardUrl  = rtrim(env('PETE_DASHBOARD_URL', ''), '/');
+			$dashboardUrl = rtrim(env('PETE_DASHBOARD_URL', ''), '/');
 
 			if ($dashboardUrl === '') {
 				\Log::warning('Pete version_check: PETE_DASHBOARD_URL is empty');
 				return null;
 			}
 
-			$url = $dashboardUrl . '/update_button_json?parent_version=' . rawurlencode($parentVersion);
+			$url  = $dashboardUrl . '/wp-json/pete/v1/latest-version';
+			$opts = [
+				'http' => [
+					'method'        => 'GET',
+					'timeout'       => 5,
+					'ignore_errors' => true,
+					'header'        => "Accept: application/json\r\n",
+				],
+			];
 
-			
-				$opts = [
-					'http' => [
-						'method'        => 'GET',
-						'timeout'       => 5,
-						'ignore_errors' => true,
-						'header'        => "Accept: application/json\r\n",
-					],
-				];
+			$response = @file_get_contents($url, false, stream_context_create($opts));
 
-				$context  = stream_context_create($opts);
-				$response = @file_get_contents($url, false, $context);
+			if ($response === false) {
+				\Log::warning("Pete version_check: No response from {$url}");
+				return null;
+			}
 
-				if ($response === false) {
-					\Log::warning("Pete version_check: No response from {$url}");
-					return null;
-				}
+			$data = json_decode(trim($response), true);
+			if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+				\Log::error('Pete version_check: JSON decode error - ' . json_last_error_msg());
+				return null;
+			}
 
-				$response = trim($response);
-				if (str_starts_with($response, '(') && str_ends_with($response, ')')) {
-					$response = substr($response, 1, -1);
-				}
+			$version = isset($data['version']) ? (string) $data['version'] : '';
+			if ($version === '' || !preg_match('/^\d+(\.\d+){0,3}$/', $version)) {
+				\Log::warning('Pete version_check: no valid version in payload', ['payload' => $data]);
+				return null;
+			}
 
-				$data = json_decode($response, true);
-				if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
-					\Log::error("Pete version_check: JSON decode error - " . json_last_error_msg());
-					return null;
-				}
+			// Short TTL: publishing on the store busts its own cache
+			// instantly, so this is the only staleness a fresh release sees.
+			// A cache-write failure must never discard the fetched version.
+			try {
+				Cache::put(self::LAST_VERSION_CACHE_KEY, $version, now()->addSeconds(60));
+			} catch (\Throwable $e) {
+				\Log::warning('Pete version_check: could not cache version', ['error' => $e->getMessage()]);
+			}
+			\Log::info('Fetched Pete version', ['version' => $version]);
 
-				$version = $data['version'] ?? null;
-				\Log::info('Fetched Pete version', ['version' => $version]);
+			return $version;
 
-				return $version;
-                
 		} catch (\Throwable $e) {
 			\Log::error("Pete version_check exception: " . $e->getMessage());
 			return null;
