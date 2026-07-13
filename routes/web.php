@@ -18,6 +18,8 @@ Route::resource('users', UserController::class)->except(['show']);
 Route::get('dev-playground-welcome', [BaseController::class, 'devPlaygroundWelcome'])->name('base.dev.welcome');
 Route::post('/validate-pete', [BaseController::class, 'validatePete']);
 Route::get('register-your-license', [BaseController::class, 'registerYourLicense']);
+Route::get('pete-migration-plugin', [BaseController::class, 'peteMigrationPlugin'])->name('base.migration.plugin');
+Route::get('pete-migration-plugin/download', [BaseController::class, 'peteMigrationPluginDownload'])->name('base.migration.plugin.download');
 Route::get('/security', [BaseController::class, 'security'])->name('base.security');
 Route::get('/security/report', [BaseController::class, 'securityReport'])->name('base.security.report');
 

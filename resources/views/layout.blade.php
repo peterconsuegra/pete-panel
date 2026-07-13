@@ -301,6 +301,10 @@ tr.row-flash > td {
                     <i class="bi bi-plug"></i> Import
               </a>
 
+              <a href="/pete-migration-plugin" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/pete-migration-plugin') active @endif">
+                    <i class="bi bi-box-seam"></i> Migration Plugin
+              </a>
+
                  {{-- Admin-only --}}
 
                     <a href="{{ route('admin.server.status') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/serverStatus') active @endif">

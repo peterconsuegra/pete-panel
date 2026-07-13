@@ -128,4 +128,67 @@ final class BaseController extends Controller
 
         return view('base.registerYourLicense', compact('viewsw', 'currentUser', 'validate'));
     }
+
+    private const MIGRATION_PLUGIN_FILENAME = 'site-migration-backup-export-pete-panel.zip';
+
+    /**
+     * Canonical source of the plugin: the Pete dashboard always hosts the
+     * newest release at a stable URL, independent of this panel's version.
+     */
+    private function migrationPluginRemoteUrl(): ?string
+    {
+        $dashboardUrl = rtrim((string) env('PETE_DASHBOARD_URL'), '/');
+
+        return $dashboardUrl !== '' ? $dashboardUrl . '/' . self::MIGRATION_PLUGIN_FILENAME : null;
+    }
+
+    /**
+     * Bundled snapshot, used only when the dashboard is unreachable.
+     */
+    private function migrationPluginPath(): string
+    {
+        return storage_path('app/pete-migration/' . self::MIGRATION_PLUGIN_FILENAME);
+    }
+
+    /**
+     * Show the "Pete Migration Plugin" screen: how the exporter works and a
+     * download link for the WordPress plugin that converts any site into the
+     * Pete Panel import format.
+     */
+    public function peteMigrationPlugin(): View
+    {
+        $currentUser = Auth::user();
+        $viewsw      = '/pete-migration-plugin';
+
+        return view('base.peteMigrationPlugin', compact('viewsw', 'currentUser'));
+    }
+
+    /**
+     * Stream the migration plugin zip to the browser — latest release from
+     * the Pete dashboard first, bundled snapshot as offline fallback.
+     */
+    public function peteMigrationPluginDownload(): \Symfony\Component\HttpFoundation\Response
+    {
+        $remote = $this->migrationPluginRemoteUrl();
+
+        if ($remote !== null) {
+            // http wrapper without ignore_errors: fopen returns false on 4xx/5xx.
+            $context = stream_context_create(['http' => ['timeout' => 20]]);
+            $stream  = @fopen($remote, 'rb', false, $context);
+
+            if ($stream !== false) {
+                return response()->streamDownload(function () use ($stream) {
+                    fpassthru($stream);
+                    fclose($stream);
+                }, self::MIGRATION_PLUGIN_FILENAME, ['Content-Type' => 'application/zip']);
+            }
+
+            Log::warning('Pete migration plugin: dashboard download unavailable, serving bundled snapshot', ['url' => $remote]);
+        }
+
+        $path = $this->migrationPluginPath();
+        abort_unless(is_file($path), 404, 'Migration plugin package not found on this server.');
+
+        return response()->download($path, self::MIGRATION_PLUGIN_FILENAME);
+    }
 }
