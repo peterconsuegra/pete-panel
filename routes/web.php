@@ -112,3 +112,18 @@ Route::middleware(["web"])->group(function () {
     Route::post("/wordpress-importer/upload-chunk", [\App\Http\Controllers\WordPressImporterController::class, "upload"])->name("wpimport.chunk.upload");
     Route::delete("/wordpress-importer/upload-chunk/abort", [\App\Http\Controllers\WordPressImporterController::class, "abort"])->name("wpimport.chunk.abort");
 });
+
+// Laravel Manager — migrated from peteconsuegra/laravel-manager-plugin
+Route::middleware(["web"])
+    ->prefix("laravel-manager")
+    ->name("lm.")
+    ->group(function (): void {
+        Route::get("/",        [\App\Http\Controllers\LaravelManagerController::class, "index"])->name("index");
+        Route::get("/create",  [\App\Http\Controllers\LaravelManagerController::class, "create"])->name("create");
+        Route::post("/",       [\App\Http\Controllers\LaravelManagerController::class, "store"])->name("store");
+
+        Route::get("/logs/{id}", [\App\Http\Controllers\LaravelManagerController::class, "logs"])->whereNumber("id")->name("logs");
+
+        Route::post("/delete",       [\App\Http\Controllers\LaravelManagerController::class, "delete"])->name("delete");
+        Route::post("/generate-ssl", [\App\Http\Controllers\LaravelManagerController::class, "generateSsl"])->name("generate-ssl");
+    });
