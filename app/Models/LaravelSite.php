@@ -9,6 +9,11 @@ use App\Services\OMysql;
 // Extending Site Model — migrated from peteconsuegra/laravel-manager-plugin
 class LaravelSite extends Site
 {
+	// The class rename must not change the underlying table: the package's
+	// class was named Site, so Eloquent resolved `sites`. Without this,
+	// LaravelSite would resolve to the nonexistent `laravel_sites`.
+	protected $table = 'sites';
+
 	public function set_laravel_url($site_id){
 		$target_site = Site::findOrFail($site_id);
 		$this->url = $this->name . '.' . $target_site->url;
