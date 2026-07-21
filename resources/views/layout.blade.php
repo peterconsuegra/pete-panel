@@ -286,7 +286,11 @@ tr.row-flash > td {
             <nav class="list-group list-group-flush">
                 {{-- Core sections from your original sidebar --}}
                 <a href="/sites" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='sites') active @endif">
-                    <i class="bi bi-window"></i> Sites
+                    <i class="bi bi-window"></i> WP Sites
+                </a>
+
+                <a href="{{ route('lm.index') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/laravel-manager') active @endif">
+                    <i class="bi bi-braces"></i> Laravel Sites
                 </a>
 
                 <a href="/backups" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='backups') active @endif">
@@ -299,10 +303,6 @@ tr.row-flash > td {
 
               <a href="/wordpress-importer" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/wordpress-importer') active @endif">
                     <i class="bi bi-plug"></i> Import
-              </a>
-
-              <a href="{{ route('lm.index') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/laravel-manager') active @endif">
-                    <i class="bi bi-braces"></i> Laravel
               </a>
 
               <a href="/pete-migration-plugin" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/pete-migration-plugin') active @endif">
