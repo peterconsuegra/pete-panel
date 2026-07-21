@@ -301,6 +301,10 @@ tr.row-flash > td {
                     <i class="bi bi-plug"></i> Import
               </a>
 
+              <a href="{{ route('lm.index') }}" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/laravel-manager') active @endif">
+                    <i class="bi bi-braces"></i> Laravel
+              </a>
+
               <a href="/pete-migration-plugin" class="list-group-item list-group-item-action sidebar-link @if($viewsw==='/pete-migration-plugin') active @endif">
                     <i class="bi bi-box-seam"></i> Migration Plugin
               </a>
