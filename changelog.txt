@@ -4,6 +4,19 @@ All rights reserved © WordPress Pete.
 This software is proprietary. Commercial licenses available at https://wordpresspete.com  
 
 ==================================================================
+Version 15.5 – 2026-10
+------------------------------------------------------------------
+- 🔒 SSL certificates renew themselves 30 days before they expire: the panel records each
+  certificate's expiry when it is issued and checks every site with SSL daily at 03:00
+  (sites:renew-ssl); a failed renewal is retried the next day.
+- Fixed: the renewal no longer waits 360 days (Let's Encrypt certificates last 90) and never
+  turns SSL on for sites that don't use it.
+- Security: generating SSL no longer writes the Apache secret to the log or returns it to the
+  browser.
+- Needs the Laravel scheduler running: Pete Docker images built from 2026-10-14 run it (earlier
+  images skipped it).
+
+==================================================================
 Version 13.0 – 2025-09
 ------------------------------------------------------------------
 - 🚀 Major release with Laravel 10.x core upgrade (PHP 8.3 support).
