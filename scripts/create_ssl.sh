@@ -14,7 +14,6 @@ done
 echo "generating SSL"
 echo "email: $email"
 echo "domain: $domain"
-echo "apache_reload_secret: $apache_reload_secret"
 echo "project_path: $project_path"
 
 #echo "certbot --apache --non-interactive --agree-tos --email $email -d $domain"

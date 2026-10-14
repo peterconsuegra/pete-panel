@@ -40,12 +40,16 @@ class Kernel extends ConsoleKernel
             ->appendOutputTo(storage_path('logs/schedule-create_backup.log'))
             ->description('Pete: daily WordPress backups per site (retention-aware)');
 
+        // Daily SSL renewal — each site's certificate is renewed 30 days before it expires
+        // (sites.ssl_expires_at, recorded when a certificate is issued; RenewSslCommand)
         $schedule->command('sites:renew-ssl')
-        ->dailyAt('03:00')
-        ->timezone('America/Bogota')
-        ->onOneServer()
-        ->withoutOverlapping()
-        ->runInBackground();
+            ->dailyAt('03:00')
+            ->timezone('America/Bogota')
+            ->onOneServer()
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->appendOutputTo(storage_path('logs/schedule-renew-ssl.log'))
+            ->description('Pete: renew SSL certificates that expire within 30 days');
     }
 
     /**

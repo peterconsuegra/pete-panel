@@ -14,8 +14,13 @@ use Carbon\Carbon;
 use App\Services\ApacheReloader;
 use App\Services\CertbotIssuer;
 use App\Services\OServer;
+use App\Services\SslCertificate;
 
 class Site extends Model {
+
+	protected $casts = [
+		'ssl_expires_at' => 'datetime',
+	];
 
 	protected static function booted(): void
     {
@@ -93,17 +98,36 @@ class Site extends Model {
 
 		chdir("$base_path/scripts/");
 		$output = "";
-		$command = "./create_ssl.sh -e {$user_email} -d {$this->url} -s {$apache_reload_secret} -p {$project_path}";
+		$email   = escapeshellarg((string) $user_email);
+		$domain  = escapeshellarg((string) $this->url);
+		$path    = escapeshellarg((string) $project_path);
+		$command = "./create_ssl.sh -e {$email} -d {$domain} -s " . escapeshellarg((string) $apache_reload_secret) . " -p {$path}";
 		$output .= shell_exec($command);
-		
-		//if(env('PETE_DEBUG') == "active"){
+
+		// The secret stays out of the log.
 		Log::info('generating SSL');
-		Log::info($command);
+		Log::info("./create_ssl.sh -e {$email} -d {$domain} -s <secret> -p {$path}");
 		Log::info('output:');
 		Log::info($output);
-		//}
+
+		// When the new certificate expires: sites:renew-ssl (daily) renews it 30 days before.
+		$this->recordSslExpiry();
 
 		return $output;
+	}
+
+	/**
+	 * Reads the certificate the site serves and saves when it expires (null when none is served).
+	 */
+	public function recordSslExpiry(): ?Carbon
+	{
+		$expiresAt = SslCertificate::expiresAt((string) $this->url);
+		if ($expiresAt) {
+			$this->ssl_expires_at = $expiresAt;
+			$this->save();
+			Log::info('SSL certificate expiry recorded.', ['site_id' => $this->id, 'domain' => $this->url, 'expires_at' => $expiresAt->toIso8601String()]);
+		}
+		return $expiresAt;
 	}
 	
 	public static function get_server_data($user){
