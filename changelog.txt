@@ -4,6 +4,18 @@ All rights reserved © WordPress Pete.
 This software is proprietary. Commercial licenses available at https://wordpresspete.com  
 
 ==================================================================
+Version 15.7 – 2026-10
+------------------------------------------------------------------
+- 🧩 Laravel Manager creates and imports Laravel 13 apps (13.* in the version list).
+- Fixed: creating a Laravel 11+ app no longer runs the new app's setup scripts with the panel's
+  database settings (they tried to migrate the panel's own database); Composer now runs with a
+  clean environment.
+- Fixed: importing a repository without a committed composer.lock installs packages that run on
+  the server's PHP (it could pick packages that need a newer PHP and leave a broken app).
+  Repositories with a committed composer.lock install as before.
+- Fixed: deleting a Laravel app also removes its MySQL user.
+
+==================================================================
 Version 15.6 – 2026-10
 ------------------------------------------------------------------
 - 🧩 Laravel Manager is back, now built into the panel (no plugin to install): "Laravel Sites"
