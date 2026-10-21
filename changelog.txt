@@ -4,6 +4,18 @@ All rights reserved © WordPress Pete.
 This software is proprietary. Commercial licenses available at https://wordpresspete.com  
 
 ==================================================================
+Version 15.6 – 2026-10
+------------------------------------------------------------------
+- 🧩 Laravel Manager is back, now built into the panel (no plugin to install): "Laravel Sites"
+  in the sidebar lists the Laravel apps on the server, and "Create or Import a Laravel Instance"
+  makes a new Laravel app (8.* to 12.*) or imports one from a Git repository and branch, each
+  with its own database and Apache vhost. Per-app logs, SSL and delete.
+- The sidebar's "Sites" entry is now "WP Sites", with "Laravel Sites" right below it.
+- Servers that still have the old Composer package peteconsuegra/laravel-manager-plugin should
+  remove it (composer remove peteconsuegra/laravel-manager-plugin --ignore-platform-reqs):
+  the panel now serves the same /laravel-manager pages itself.
+
+==================================================================
 Version 15.5 – 2026-10
 ------------------------------------------------------------------
 - 🔒 SSL certificates renew themselves 30 days before they expire: the panel records each
