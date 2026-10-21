@@ -24,6 +24,14 @@ class LaravelSite extends Site
 		$pete_options = new PeteOption();
 	    $app_root = $pete_options->get_meta_value('app_root');
 
+		// The app's own MySQL user: recorded by create_laravel(); older apps only
+		// have it in their .env, so read it before the folder is removed.
+		$db_user = $this->db_user;
+		$env_file = $app_root . '/' . $this->name . '/.env';
+		if(empty($db_user) && is_readable($env_file)
+			&& preg_match('/^DB_USERNAME=(\S+)/m', (string) file_get_contents($env_file), $m))
+			$db_user = $m[1];
+
 		$script_path = base_path('scripts/laravel-manager');
 		chdir($script_path);
 
@@ -37,6 +45,10 @@ class LaravelSite extends Site
 
 		if(isset($this->db_name))
 			OMysql::delete_database($host,$this->db_name,$db_user_pass);
+
+		// Only users the Laravel Manager created (usr_…), never the panel's own.
+		if(!empty($db_user) && str_starts_with((string) $db_user, 'usr_'))
+			OMysql::drop_user((string) $db_user);
 
 	  	if(env('PETE_DEBUG') == "active"){
 			Log::info("######DELETE LOGIC DEBUG########");
@@ -98,6 +110,7 @@ class LaravelSite extends Site
 			Log::info($output);
 	  	}
 		$this->db_name = $db_name;
+		$this->db_user = $db_user;
 		$this->output = $this->output . "####### LARAVEL #######\n";
 		$this->output .= $output;
 	   	$this->save();

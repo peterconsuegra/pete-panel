@@ -162,6 +162,21 @@ class OMysql
         Log::info("Database dropped (if existed): {$db_name}");
     }
 
+    /** Drop a MySQL user if it exists. */
+    public static function drop_user(string $username, string $host = '%'): void
+    {
+        $conn = self::connectRoot();
+        $u = $conn->real_escape_string($username);
+        $h = $conn->real_escape_string($host);
+        if (!$conn->query("DROP USER IF EXISTS '{$u}'@'{$h}'")) {
+            $err = $conn->error;
+            $conn->close();
+            throw new \Exception("DROP USER failed: {$err}");
+        }
+        $conn->close();
+        Log::info("User dropped (if existed): {$username}@{$host}");
+    }
+
     /* ──────────────────────────────
      * Legacy helpers you already use
      * ────────────────────────────── */
