@@ -87,7 +87,7 @@ class LaravelManagerController extends Controller
                 'nullable',
                 'string',
                 // Optionally constrain allowed values:
-                Rule::in(['8.*','9.*','10.*','11.*','12.*']),
+                Rule::in(['8.*','9.*','10.*','11.*','12.*','13.*']),
                 // or allow anything like "10.*": 'regex:/^\d+\.\*$/'
             ],
 

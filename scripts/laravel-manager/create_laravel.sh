@@ -53,19 +53,32 @@ fi
 
 project_route=$route/$project_name
 
+# Composer runs the app's own scripts (Laravel 11+ skeletons run "artisan migrate"
+# after create-project). Run it without the panel's environment, or the panel's
+# DB_* and APP_KEY reach those scripts and they act on the panel's database.
+clean_env=(env -i PATH="$PATH" HOME="$HOME" COMPOSER_HOME="$COMPOSER_HOME" COMPOSER_CACHE_DIR="$COMPOSER_CACHE_DIR")
+
 if [[ $action_name == "New" ]]; then
 	echo "check2"
 	mkdir $project_route
 	echo "cd $project_route && $composer_bin create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1"
-	cd $project_route && composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1
+	cd $project_route && "${clean_env[@]}" composer create-project laravel/laravel="$laravel_version" . --prefer-dist 2>&1
 
 elif [[ $action_name == "Import" ]]; then
 	echo "check3"
 	mkdir $project_route
 	echo "cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git ."
 	cd $project_route && git clone -b $wordpress_laravel_git_branch $wordpress_laravel_git .
-	echo "cd $project_route && $composer_bin install --ignore-platform-reqs 2>&1"
-	cd $project_route && $composer_bin install --ignore-platform-reqs 2>&1
+	# Without a committed composer.lock, Composer picks the versions here: keep the
+	# PHP version check so they run on this PHP (ignoring it pulls Symfony 8 into a
+	# Laravel 13 app, which needs PHP 8.4). A committed lock installs as before.
+	if [[ -f $project_route/composer.lock ]]; then
+		platform_flags=(--ignore-platform-reqs)
+	else
+		platform_flags=("--ignore-platform-req=ext-*")
+	fi
+	echo "cd $project_route && $composer_bin install ${platform_flags[*]} 2>&1"
+	cd $project_route && "${clean_env[@]}" $composer_bin install "${platform_flags[@]}" 2>&1
 	
 	#wpml error patch
 	echo "rm $project_route/vendor/laravel/framework/src/illuminate/Foundation/helpers.php"
