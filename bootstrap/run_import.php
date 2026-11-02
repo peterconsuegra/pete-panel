@@ -25,6 +25,17 @@ $dest     = (string) ($args['dest'] ?? '');
 $user     = (int)    ($args['user'] ?? 0);
 $template = (string) ($args['template'] ?? '');
 
+// The uploaded archive is only needed while this job runs: delete it once the job ends,
+// succeeded or failed ($fail exits, so a shutdown function). Only files inside
+// storage/app/wordpress-imports; a "Server path" archive belongs to the user and stays.
+register_shutdown_function(function () use ($template) {
+    $uploads = realpath(storage_path('app/wordpress-imports'));
+    $file    = $template !== '' ? realpath($template) : false;
+    if ($uploads && $file && is_file($file) && str_starts_with($file, $uploads . DIRECTORY_SEPARATOR)) {
+        @unlink($file);
+    }
+});
+
 $statusDir = storage_path('app/import-jobs');
 @mkdir($statusDir, 0775, true);
 

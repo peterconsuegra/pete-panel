@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\UpdateOptionVersion::class,
         \App\Console\Commands\ClearPeteCache::class,
         \App\Console\Commands\ActivateSecurity::class,
-         \App\Console\Commands\RenewSslCommand::class
+         \App\Console\Commands\RenewSslCommand::class,
+        \App\Console\Commands\CleanWordPressImports::class
     ];
 
     /**
@@ -50,6 +51,15 @@ class Kernel extends ConsoleKernel
             ->runInBackground()
             ->appendOutputTo(storage_path('logs/schedule-renew-ssl.log'))
             ->description('Pete: renew SSL certificates that expire within 30 days');
+
+        // Hourly — delete uploaded import archives no running import uses (CleanWordPressImports)
+        $schedule->command('wordpress-imports:clean')
+            ->hourlyAt(40)
+            ->onOneServer()
+            ->withoutOverlapping()
+            ->runInBackground()
+            ->appendOutputTo(storage_path('logs/schedule-wordpress-imports-clean.log'))
+            ->description('Pete: delete WordPress import uploads no import is using');
     }
 
     /**
