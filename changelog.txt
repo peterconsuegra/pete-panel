@@ -4,6 +4,17 @@ All rights reserved © WordPress Pete.
 This software is proprietary. Commercial licenses available at https://wordpresspete.com  
 
 ==================================================================
+Version 15.8 – 2026-11
+------------------------------------------------------------------
+- 🧹 WordPress imports no longer pile up in storage/app/wordpress-imports: each import deletes
+  its uploaded archive when it finishes (success or failure). Archives given as a server path
+  are never touched.
+- New hourly cleanup (`php artisan wordpress-imports:clean`, at :40) removes uploaded archives
+  older than 6 hours that no running import is using. `--dry-run` lists them, `--hours=N`
+  changes the age. Log: storage/logs/schedule-wordpress-imports-clean.log.
+- Note: a failed import now needs its archive uploaded again.
+
+==================================================================
 Version 15.7 – 2026-10
 ------------------------------------------------------------------
 - 🧩 Laravel Manager creates and imports Laravel 13 apps (13.* in the version list).
